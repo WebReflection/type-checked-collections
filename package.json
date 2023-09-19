@@ -1,6 +1,6 @@
 {
   "name": "type-checked-collections",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Collections that actually type-check at runtime, not only in IDEs",
   "main": "./cjs/index.js",
   "scripts": {
