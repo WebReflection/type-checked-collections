@@ -60,7 +60,7 @@ ts.add(void 0);
 ts.add(true);
 ```
 
-| typeof    | description                                   |
+| typeof    | runtime check                                 |
 | :-------- | :-------------------------------------------- |
 | string    | `typeof value === 'string'`                   |
 | boolean   | `typeof value === 'boolean'`                  |
@@ -71,3 +71,16 @@ ts.add(true);
 | bigint    | `typeof value === 'bigint'`                   |
 | object    | `typeof value === 'object' && value !== null` |
 | null      | `value === null`                              |
+
+
+The `instanceof` single or multiple class value is checked via `instanceof` operator.
+
+### Performance
+
+If `typeof` value is specified, it is the first performed check and it is the fastest check in ECMAScript.
+
+If that passes, and the `instanceof` value is defined, an `instanceof` operator is used to validate further. The same happens if no `typeof` field is defined, but only `instanceof`.
+
+In `Map` and `WeakMap` cases, if either the *key* or the value is *null* or *undefined*, the check is a no-op such as `() => true`.
+
+Last, but not least, if there is only **one type** to check, either one `typeof` without unions or one `instanceof` class only, the check is done directly without looping through the array of possible valid types.
