@@ -36,6 +36,10 @@
       "import": "./esm/index.js",
       "default": "./cjs/index.js"
     },
+    "./dummy": {
+      "import": "./esm/dummy.js",
+      "default": "./cjs/dummy.js"
+    },
     "./package.json": "./package.json"
   },
   "unpkg": "es.js",

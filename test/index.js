@@ -1,3 +1,4 @@
+import './dummy.js';
 import { typedSet, typedMap } from '../esm/index.js';
 
 let TypedString = typedSet({typeof: 'string'});
