@@ -15,6 +15,7 @@ import { typedSet, typedMap, typedWeakSet, typedWeakMap } from 'type-checked-col
 //  * instanceof is a Class or an array of classes (unions)
 
 // Set define the kind of value they can use
+/** @type {Set<string>} */
 const StringSet = typedSet({typeof: 'string'});
 
 const myStrings = new StringSet(['a', 'b']);
