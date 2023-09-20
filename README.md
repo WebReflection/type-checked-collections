@@ -90,14 +90,14 @@ The `instanceof` single or multiple class value is checked via `instanceof` oper
 
 If `typeof` value is specified, it is the first performed check and it is the fastest check in ECMAScript.
 
-If that passes, and the `instanceof` value is defined, an `instanceof` operator is used to validate further. The same happens if no `typeof` field is defined, but only `instanceof`.
+If the `instanceof` value is defined, an `instanceof` operator is used to validate further in case previous `typeof`, if present, failed.
 
 In `Map` and `WeakMap` cases, if either the *key* or the value is *null* or *undefined*, the check is a no-op such as `() => true`.
 
-Last, but not least, if there is only **one type** to check, either one `typeof` without unions or one `instanceof` class only, the check is done directly without looping through the array of possible valid types.
+Last, but not least, if there is only **one type** to check, either one `typeof` without unions or one `instanceof` class only, the check is done directly without looping through the array of possible valid types (as in: best possible perf).
 
 ### Go Native
 
-If you are happy with the development experience and you'd like to drop all checks and use just native `Set`, `Map` or others, there is a `type-checked-collections/dummy` export that is a *drop-in* replacement that results into a *no-op*, meaning all you get is the native `Set`, `Map` or others constructors resulting in zero runtime overhead.
+If you are happy with the development experience and you'd like to drop all checks and use just native `Set`, `Map` or others, there is a [type-checked-collections/dummy](./esm/dummy.js) export that is a *drop-in* replacement that results into a *no-op*, meaning all you get is the native `Set`, `Map` or others constructors resulting in zero runtime overhead.
 
 This could be handy also for perf comparison (in case you believe the issue is caused by this library) or debugging sessions (to have the least amount of code to step into while debugging).
