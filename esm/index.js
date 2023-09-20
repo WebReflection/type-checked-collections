@@ -19,11 +19,11 @@ const validator = (type, Class) => {
     for (const C of [].concat(Class))
       checks.push(o => o instanceof C);
   }
-  if (checks.length === 1)
-    return checks[0];
-  if (checks.length)
-    return v => checks.some(f => f(v));
-  return any;
+  switch (checks.length) {
+    case 0: return any;
+    case 1: return checks[0];
+    default: return v => checks.some(f => f(v));
+  }
 };
 
 const failure = (type, Class, kind, onerror = error) => value => {
