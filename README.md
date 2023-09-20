@@ -42,11 +42,19 @@ import { typedSet } from 'type-checked-collections';
 const TypedSet = typedSet({
   // accept typeof string and typeof number
   typeof: 'string | number',
+
   // accept only instance of String
   instanceof: String,
   // ... or ...
   // accept instance of String or instance of Number
   instanceof: [String, Number],
+
+  // optionally it is possible to pass an error handler
+  onerror(/** @type {string} */ message, value) {
+    throw new TypeError(message);
+    // value is literally whatever value was used
+    // and failed either as key or as value
+  },
 });
 
 const ts = new TypedSet([

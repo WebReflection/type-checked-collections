@@ -1,16 +1,23 @@
 import './dummy.js';
 import { typedSet, typedMap } from '../esm/index.js';
 
+let lastError = [];
+
 /** @type {Set<string>} */
-let TypedString = typedSet({typeof: 'string'});
+let TypedString = typedSet({typeof: 'string', onerror(...args) {
+  lastError.push(...args);
+}});
 
 let ts = new TypedString(['a']);
-try {
-  ts.add(1);
-  process.exit(1);
-} catch ({ message }) {
-  console.info('\x1b[1mExpected\x1b[0m:', message);
+ts.add(1);
+if (
+  lastError.length === 2 &&
+  lastError[1] === 1 &&
+  lastError[0] === 'Invalid number value: expected string'
+) {
+  console.info('\x1b[1mExpected\x1b[0m:', lastError[0]);
 }
+else proocess.exit(1);
 
 TypedString = typedSet({instanceof: String});
 ts = new TypedString([new String('a')]);

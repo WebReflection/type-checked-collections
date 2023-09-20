@@ -1,4 +1,7 @@
 const any = () => true;
+const error = message => {
+  throw new TypeError(message);
+};
 
 const validator = (type, Class) => {
   const checks = [];
@@ -23,7 +26,7 @@ const validator = (type, Class) => {
   return any;
 };
 
-const failure = (type, Class, kind = 'value') => value => {
+const failure = (type, Class, kind, onerror = error) => value => {
   const message = [`Invalid ${typeof value} ${kind}: expected `];
   if (type) {
     message.push(type);
@@ -33,12 +36,20 @@ const failure = (type, Class, kind = 'value') => value => {
     message.push('an instanceof ');
     message.push([].concat(Class).map(({name}) => name).join(' | '));
   }
-  throw new TypeError(message.join(''));
+  onerror(message.join(''), value);
 };
 
-const createSet = Set => ({ typeof: type, instanceof: Class }) => {
-  const check = validator(type, Class);
-  const fail = failure(type, Class);
+const checkFail = (options, kind = 'value') => {
+  const type = options?.typeof;
+  const Class = options?.instanceof;
+  return [
+    validator(type, Class),
+    failure(type, Class, kind, options?.onerror)
+  ];
+};
+
+const createSet = Set => options => {
+  const [check, fail] = checkFail(options);
   return class TypedSet extends Set {
     add(value) {
       return check(value) ? super.add(value) : fail(value);
@@ -49,13 +60,9 @@ const createSet = Set => ({ typeof: type, instanceof: Class }) => {
 export const typedSet = createSet(Set);
 export const typedWeakSet = createSet(WeakSet);
 
-const createMap = Map => ([key, value]) => {
-  const kt = key?.typeof, ki = key?.instanceof;
-  const checkKey = validator(kt, ki);
-  const failKey = failure(kt, ki, 'key');
-  const vt = value?.typeof, vi = value?.instanceof;
-  const checkValue = validator(vt, vi);
-  const failValue = failure(vt, vi);
+const createMap = Map => ([keyOptions, valueOptions]) => {
+  const [checkKey, failKey] = checkFail(keyOptions, 'key');
+  const [checkValue, failValue] = checkFail(valueOptions);
   return class TypedMap extends Map {
     set(key, value) {
       if (!checkKey(key)) failKey(key);
